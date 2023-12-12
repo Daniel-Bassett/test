@@ -2,5 +2,6 @@ pandas
 numpy
 openai
 bs4
-selenium==4.1.1
+selenium
 webdriver_manager
+firefox-esr
