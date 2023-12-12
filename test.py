@@ -41,6 +41,11 @@ try:
 except:
     pass
 
+try:
+    client = OpenAI(api_key=API_KEY)
+except:
+    client = OpenAI(api_key=st.secrets["api_key"])
+
 # load client
 client = OpenAI(api_key=API_KEY)
 
