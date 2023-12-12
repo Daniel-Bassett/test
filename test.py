@@ -62,13 +62,13 @@ def url_parse(internal_hrefs):
     return normalized_urls
 
 
-# @st.cache_resource
+@st.cache_resource
 def get_driver():
     options = Options()
     options.add_argument('--disable-gpu')
     options.add_argument('--headless')
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-    options.add_experimental_option("detach", True)
+    # options.add_experimental_option("detach", True)
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # return webdriver.Chrome(options=options)
 
@@ -90,22 +90,24 @@ def get_summary(page_text):
 tab1, tab2 = st.tabs(['Search', 'URL'])
 
 with tab1:
-    @st.cache_resource
-    def installff():
-        os.system('sbase install chromedriver')
-        os.system('ln -s /home/appuser/venv/lib/python3.10/site-packages/seleniumbase/drivers/chromium/home/appuser/venv/bin/chromium')
+    with st.echo():
+        from selenium import webdriver
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.chrome.service import Service
+        from webdriver_manager.chrome import ChromeDriverManager
 
-    _ = installff()
-    from selenium import webdriver
-    from selenium.webdriver import Chrome
-    opts = Options()
-    opts.add_argument("--headless")
-    browser = webdriver.Chrome(options=opts)
+        @st.cache_resource
+        def get_driver():
+            return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    browser.get('http://example.com')
-    st.write(browser.page_source)
-    test = st.text_input('Enter')
-    st.write(test)
+        options = Options()
+        options.add_argument('--disable-gpu')
+        options.add_argument('--headless')
+
+        driver = get_driver()
+        driver.get("http://example.com")
+
+        st.code(driver.page_source)
 
 with tab2:
     # get user url input
