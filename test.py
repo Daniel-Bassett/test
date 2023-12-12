@@ -6,6 +6,7 @@ import streamlit as st
 # import time
 # import io
 import json
+import os, sys
 
 # import pandas as pd
 # import numpy as np
@@ -89,6 +90,20 @@ def get_summary(page_text):
 tab1, tab2 = st.tabs(['Search', 'URL'])
 
 with tab1:
+    @st.cache_resource
+    def installff():
+        os.system('sbase install geckodriver')
+        os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+
+    _ = installff()
+    from selenium import webdriver
+    from selenium.webdriver import FirefoxOptions
+    opts = FirefoxOptions()
+    opts.add_argument("--headless")
+    browser = webdriver.Firefox(options=opts)
+
+    browser.get('http://example.com')
+    st.write(browser.page_source)
     test = st.text_input('Enter')
     st.write(test)
 
