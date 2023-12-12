@@ -61,7 +61,7 @@ def url_parse(internal_hrefs):
     return normalized_urls
 
 
-@st.cache_resource
+# @st.cache_resource
 def get_driver():
     # service = Service(ChromeDriverManager().install())
     options = Options()
