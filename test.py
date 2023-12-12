@@ -46,9 +46,6 @@ try:
 except:
     client = OpenAI(api_key=st.secrets["api_key"])
 
-# load client
-client = OpenAI(api_key=API_KEY)
-
 
 def sort_key(item):
     return not ('about' in item or 'story' in item or 'mission' in item or 'who-we' in item or 'vision' in item)
