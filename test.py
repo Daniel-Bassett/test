@@ -63,13 +63,13 @@ def url_parse(internal_hrefs):
 
 
 # @st.cache_resource
-# def get_driver():
-#     options = Options()
-#     options.add_argument('--disable-gpu')
-#     options.add_argument('--headless')
-#     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-#     options.add_experimental_option("detach", True)
-#     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+def get_driver():
+    options = Options()
+    options.add_argument('--disable-gpu')
+    options.add_argument('--headless')
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    options.add_experimental_option("detach", True)
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # return webdriver.Chrome(options=options)
 
 
@@ -109,91 +109,91 @@ with tab1:
 
         st.code(driver.page_source)
 
-with tab2:
-    # get user url input
-    url = st.text_input('Enter url')
+# with tab2:
+#     # get user url input
+#     url = st.text_input('Enter url')
 
-    # prepend http if not found in url
-    if 'http' not in url:
-        url = 'https://' + url
+#     # prepend http if not found in url
+#     if 'http' not in url:
+#         url = 'https://' + url
 
-    st.session_state['message'] = st.empty()
+#     st.session_state['message'] = st.empty()
 
-    # button for scraping site
-    if st.button('Scrape Site'):
-    # set session state for loading messages
+#     # button for scraping site
+#     if st.button('Scrape Site'):
+#     # set session state for loading messages
 
 
-        driver = get_driver()
-        driver.get(url)
+#         driver = get_driver()
+#         driver.get(url)
 
-        st.session_state['message'].text(f"Loading {url}...")
+#         st.session_state['message'].text(f"Loading {url}...")
 
-        # parse url
-        time.sleep(2)
-        url = driver.current_url
-        # st.write(url)
-        parsed_url = urlparse(url)
-        hostname = parsed_url.hostname
-        # st.write(hostname)
+#         # parse url
+#         time.sleep(2)
+#         url = driver.current_url
+#         # st.write(url)
+#         parsed_url = urlparse(url)
+#         hostname = parsed_url.hostname
+#         # st.write(hostname)
 
-        # Use BeautifulSoup to parse and scrape
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        page_text = soup.get_text()
+#         # Use BeautifulSoup to parse and scrape
+#         html = driver.page_source
+#         soup = BeautifulSoup(html, 'html.parser')
+#         page_text = soup.get_text()
 
-        # get anchor tags
-        anchor_tags = driver.find_elements(By.TAG_NAME, "a")
+#         # get anchor tags
+#         anchor_tags = driver.find_elements(By.TAG_NAME, "a")
 
-        # Extract href attributes
-        hrefs = [tag.get_attribute('href') for tag in anchor_tags if tag.get_attribute('href')]
+#         # Extract href attributes
+#         hrefs = [tag.get_attribute('href') for tag in anchor_tags if tag.get_attribute('href')]
         
-        # drop duplicate hrefs
-        hrefs = set(hrefs)
+#         # drop duplicate hrefs
+#         hrefs = set(hrefs)
 
-        # create list of internal hrefs
-        internal_list = [f'{url}', hostname.split('.')[0]]
-        internal_hrefs = [href for href in hrefs if all(include in href for include in internal_list)]
-        internal_hrefs = url_parse(internal_hrefs)
-        internal_hrefs = set(internal_hrefs)
-        internal_hrefs = list(internal_hrefs)
-        internal_hrefs = [href for href in internal_hrefs if 'about' in href or 'story' in href or 'mission' in href or 'who-we' in href or 'vision' in href]
-        # internal_hrefs = sorted(internal_hrefs, key=sort_key)
+#         # create list of internal hrefs
+#         internal_list = [f'{url}', hostname.split('.')[0]]
+#         internal_hrefs = [href for href in hrefs if all(include in href for include in internal_list)]
+#         internal_hrefs = url_parse(internal_hrefs)
+#         internal_hrefs = set(internal_hrefs)
+#         internal_hrefs = list(internal_hrefs)
+#         internal_hrefs = [href for href in internal_hrefs if 'about' in href or 'story' in href or 'mission' in href or 'who-we' in href or 'vision' in href]
+#         # internal_hrefs = sorted(internal_hrefs, key=sort_key)
 
 
-        for url in internal_hrefs:
-            st.session_state['message'].text(f"Loading {url}...")
-            driver.get(url)
-            html = driver.page_source
-            soup = BeautifulSoup(html, 'html.parser')
-            page_text += soup.get_text()
+#         for url in internal_hrefs:
+#             st.session_state['message'].text(f"Loading {url}...")
+#             driver.get(url)
+#             html = driver.page_source
+#             soup = BeautifulSoup(html, 'html.parser')
+#             page_text += soup.get_text()
 
-        # Close the browser
-        driver.quit()
+#         # Close the browser
+#         driver.quit()
 
-        # Display the scraped text
-        # st.write(internal_hrefs)
-        # st.write(page_text)
+#         # Display the scraped text
+#         # st.write(internal_hrefs)
+#         # st.write(page_text)
 
-        st.session_state['message'].text(f"Extracting Keywords/Summary...")
-        data = get_summary(page_text)
-        # st.write(data)
+#         st.session_state['message'].text(f"Extracting Keywords/Summary...")
+#         data = get_summary(page_text)
+#         # st.write(data)
 
-        # st.markdown('### Summary:', unsafe_allow_html=True)
-        # st.write(data['summary'])
+#         # st.markdown('### Summary:', unsafe_allow_html=True)
+#         # st.write(data['summary'])
 
-        # st.markdown('### Keywords:', unsafe_allow_html=True)
-        # st.write(data['keywords'])
+#         # st.markdown('### Keywords:', unsafe_allow_html=True)
+#         # st.write(data['keywords'])
 
-        # st.session_state['message'].empty()
-        st.session_state['keywords'] = data['keywords']
-        st.session_state['summary'] = data['summary']
+#         # st.session_state['message'].empty()
+#         st.session_state['keywords'] = data['keywords']
+#         st.session_state['summary'] = data['summary']
     
-    if st.session_state['keywords']:
-        st.markdown('### Summary:', unsafe_allow_html=True)
-        st.write(st.session_state['summary'])
+#     if st.session_state['keywords']:
+#         st.markdown('### Summary:', unsafe_allow_html=True)
+#         st.write(st.session_state['summary'])
 
-        st.markdown('### Keywords:', unsafe_allow_html=True)
-        st.write(st.session_state['keywords'])
+#         st.markdown('### Keywords:', unsafe_allow_html=True)
+#         st.write(st.session_state['keywords'])
 
-        st.session_state['message'].empty()
+#         st.session_state['message'].empty()
