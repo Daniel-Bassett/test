@@ -97,10 +97,10 @@ with tab1:
 
     _ = installff()
     from selenium import webdriver
-    from selenium.webdriver import FirefoxOptions
-    opts = FirefoxOptions()
+    from selenium.webdriver import Chrome
+    opts = Options()
     opts.add_argument("--headless")
-    browser = webdriver.Firefox(options=opts)
+    browser = webdriver.Chrome(options=opts)
 
     browser.get('http://example.com')
     st.write(browser.page_source)

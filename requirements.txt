@@ -4,4 +4,3 @@ openai
 bs4
 selenium
 webdriver_manager
-firefox-esr
